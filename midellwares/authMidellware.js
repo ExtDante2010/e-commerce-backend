@@ -10,7 +10,8 @@ const authMidellware = asyncHandlers(async (req, res, next) => {
       if (token) {
         const decoded = jsonwebtoken.verify(token, process.env.JWT_TOKEN);
         const user = await User.findById(decoded?.id);
-        res.user = user;
+        req.user = user;
+        console.log(res.user);
         next();
       }
     } catch (error) {
