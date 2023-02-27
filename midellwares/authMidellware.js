@@ -11,7 +11,6 @@ const authMidellware = asyncHandlers(async (req, res, next) => {
         const decoded = jsonwebtoken.verify(token, process.env.JWT_TOKEN);
         const user = await User.findById(decoded?.id);
         req.user = user;
-        console.log(res.user);
         next();
       }
     } catch (error) {
@@ -23,7 +22,13 @@ const authMidellware = asyncHandlers(async (req, res, next) => {
 });
 
 export const isAdmin = asyncHandlers(async (req, res, next) => {
-  console.log(req.user);
+  const { email } = req.user;
+  const adminUser = await User.findOne({ email });
+  if (adminUser.role !== "admin") {
+    throw new Error("You are not an admin");
+  } else {
+    next();
+  }
 });
 
 export default authMidellware;

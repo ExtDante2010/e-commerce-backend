@@ -24,6 +24,10 @@ const userSchema = mongoose.Schema(
       type: String,
       require: true,
     },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
     role: {
       type: String,
       default: "user",
@@ -44,6 +48,9 @@ const userSchema = mongoose.Schema(
         ref: "products",
       },
     ],
+    refreshToken: {
+      type: String,
+    },
   },
   {
     timestamps: true,

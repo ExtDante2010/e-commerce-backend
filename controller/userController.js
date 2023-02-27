@@ -1,6 +1,9 @@
 import User from "../models/userModels.js";
 import asyncHandlers from "express-async-handler";
 import generateToken from "../config/jwTojen.js";
+import { validateMoondoId } from "../utils/validateMondodb.js";
+import generateRefreshToken from "../config/refreshToken.js";
+import jsonwebtoken from "jsonwebtoken";
 
 // CREATE USER //
 
@@ -22,6 +25,20 @@ export const loginUser = asyncHandlers(async (req, res) => {
 
   const findUser = await User.findOne({ email: email });
   if (findUser && (await findUser.isPasswordMatched(password))) {
+    const refreshToken = await generateRefreshToken(findUser?._id);
+    const updateuser = await User.findByIdAndUpdate(
+      findUser,
+      {
+        refreshToken: refreshToken,
+      },
+      {
+        new: true,
+      }
+    );
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      maxAge: 72 * 60 * 60 * 1000,
+    });
     res.json({
       _id: findUser?._id,
       firstname: findUser?.firstname,
@@ -35,13 +52,39 @@ export const loginUser = asyncHandlers(async (req, res) => {
   }
 });
 
+// HANDLE REFRESH TOKEN //
+
+export const handleRefreshToken = asyncHandlers(async (req, res) => {
+  const cookie = req.cookies;
+  console.log(cookie);
+  if (!cookie?.refreshToken) throw new Error("No refresh token in Cookies");
+  const refreshToken = cookie.refreshToken;
+  console.log(refreshToken);
+  const user = await User.findOne({ refreshToken });
+  if (!user) throw new Error("No refresh token prensent in db or not matched");
+  jsonwebtoken.verify(
+    refreshToken,
+    process.env.JWT_TOKEN,
+    (error,
+    (decoded) => {
+      if (error || user.id !== decoded.id) {
+        throw new Error("There is Something wrong with refresh token ");
+      }
+      const accessToken = generateToken(user?._id);
+      res.json({ accessToken });
+    })
+  );
+  res.json(user);
+});
+
 //UPDATE A USER //
 
 export const updateAuser = asyncHandlers(async (req, res) => {
-  const { id } = req.params;
+  const { _id } = req.user;
+  validateMoondoId(_id);
   try {
     const updatedUser = await User.findByIdAndUpdate(
-      id,
+      _id,
       {
         firstname: req.body?.firstname,
         lastname: req.body?.lastname,
@@ -74,6 +117,8 @@ export const getAlluser = asyncHandlers(async (req, res) => {
 export const getAuser = asyncHandlers(async (req, res) => {
   const { id } = req.params;
 
+  validateMoondoId(id);
+
   try {
     const getUser = await User.findById(id);
     res.json({
@@ -88,11 +133,54 @@ export const getAuser = asyncHandlers(async (req, res) => {
 
 export const deleteAuser = asyncHandlers(async (req, res) => {
   const { id } = req.params;
+  validateMoondoId(id);
 
   try {
     const deleteUser = await User.findByIdAndDelete(id);
     res.json({
       deleteUser,
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+// BLOCKED AND UNBLOCKER USER //
+
+export const blockUser = asyncHandlers(async (req, res) => {
+  const { id } = req.params;
+  validateMoondoId(id);
+  try {
+    const block = await User.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: true,
+      },
+      {
+        new: true,
+      }
+    );
+    res.json({
+      message: "User Block",
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+export const unblockUser = asyncHandlers(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const unblock = await User.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: false,
+      },
+      {
+        new: true,
+      }
+    );
+    res.json({
+      message: "User unblocked",
     });
   } catch (error) {
     throw new Error(error);
