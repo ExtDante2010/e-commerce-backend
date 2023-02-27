@@ -1,11 +1,11 @@
 import User from "../models/userModels.js";
 import asyncHandlers from "express-async-handler";
 import generateToken from "../config/jwTojen.js";
-import { validateMoondoId } from "../utils/validateMondodb.js";
+import { validateMoongoId } from "../utils/validateMongodb.js";
 import generateRefreshToken from "../config/refreshToken.js";
 import jsonwebtoken from "jsonwebtoken";
 
-// CREATE USER //
+// HANDLER CREATE USER //
 
 export const createUser = asyncHandlers(async (req, res) => {
   const email = req.body.email;
@@ -18,7 +18,7 @@ export const createUser = asyncHandlers(async (req, res) => {
   }
 });
 
-//LOGIN USER //
+//HANDLER LOGIN USER //
 
 export const loginUser = asyncHandlers(async (req, res) => {
   const { email, password } = req.body;
@@ -52,7 +52,7 @@ export const loginUser = asyncHandlers(async (req, res) => {
   }
 });
 
-// HANDLE REFRESH TOKEN //
+// HANDLER REFRESH TOKEN //
 
 export const handleRefreshToken = asyncHandlers(async (req, res) => {
   const cookie = req.cookies;
@@ -69,7 +69,7 @@ export const handleRefreshToken = asyncHandlers(async (req, res) => {
   });
 });
 
-// LOGOUT FUNTIONALLY //
+// HANDLER LOGOUT FUNTIONALLY //
 
 export const logout = asyncHandlers(async (req, res) => {
   const cookie = req.cookies;
@@ -94,11 +94,11 @@ export const logout = asyncHandlers(async (req, res) => {
   res.sendStatus(204); // forbidden
 });
 
-//UPDATE A USER //
+//HANDLER UPDATE A USER //
 
 export const updateAuser = asyncHandlers(async (req, res) => {
   const { _id } = req.user;
-  validateMoondoId(_id);
+  validateMoongoId(_id);
   try {
     const updatedUser = await User.findByIdAndUpdate(
       _id,
@@ -118,7 +118,7 @@ export const updateAuser = asyncHandlers(async (req, res) => {
   }
 });
 
-// ALL USER//
+// HANDLER SEARCH ALL USER//
 
 export const getAlluser = asyncHandlers(async (req, res) => {
   try {
@@ -129,11 +129,11 @@ export const getAlluser = asyncHandlers(async (req, res) => {
   }
 });
 
-// GET A USER //
+//HANDLER SEARCH A USER //
 
 export const getAuser = asyncHandlers(async (req, res) => {
   const id = req.user.id;
-  validateMoondoId(id);
+  validateMoongoId(id);
 
   try {
     const getUser = await User.findById(id);
@@ -145,11 +145,11 @@ export const getAuser = asyncHandlers(async (req, res) => {
   }
 });
 
-// DELETE A USER //
+// HANDLER DELETE A USER //
 
 export const deleteAuser = asyncHandlers(async (req, res) => {
   const { id } = req.params;
-  validateMoondoId(id);
+  validateMoongoId(id);
 
   try {
     const deleteUser = await User.findByIdAndDelete(id);
@@ -161,11 +161,11 @@ export const deleteAuser = asyncHandlers(async (req, res) => {
   }
 });
 
-// BLOCKED AND UNBLOCKER USER //
+// HANDLER - BLOCKED AND UNBLOCKER USER //
 
 export const blockUser = asyncHandlers(async (req, res) => {
   const { id } = req.user;
-  validateMoondoId(id);
+  validateMoongoId(id);
   try {
     const block = await User.findByIdAndUpdate(
       id,
