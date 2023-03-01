@@ -133,6 +133,7 @@ export const getAlluser = asyncHandlers(async (req, res) => {
 
 export const getAuser = asyncHandlers(async (req, res) => {
   const id = req.user.id;
+
   validateMoongoId(id);
 
   try {

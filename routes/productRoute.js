@@ -12,9 +12,8 @@ export const router = Express.Router();
 
 // Product //
 
-router.post("/", createProduct);
+router.post("/", authMidellware, isAdmin, createProduct);
 router.get("/search-product/:id", getProduct);
-router.get("/search-all-product", getallProduct);
-router.put("/update-product/:id", updateProduct);
-router.delete("/delete-product/:id", deleteProduct);
-router.delete("/delete-product/:id", deleteProduct);
+router.get("/", getallProduct);
+router.put("/update-product/:id", authMidellware, isAdmin, updateProduct);
+router.delete("/delete-product/:id", authMidellware, isAdmin, deleteProduct);
