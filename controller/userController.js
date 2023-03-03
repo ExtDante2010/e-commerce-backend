@@ -203,3 +203,20 @@ export const unblockUser = asyncHandlers(async (req, res) => {
     throw new Error(error);
   }
 });
+
+// handler update password
+
+export const updatePassword = asyncHandlers(async (req, res) => {
+  const id = req.user.id;
+  const password = req.body;
+  validateMoongoId(id);
+  const user = await User.findById(id);
+  console.log(user);
+  if (password) {
+    User.password = password;
+    const updatePassword = await user.save();
+    res.json(updatePassword);
+  } else {
+    res.json(user);
+  }
+});
