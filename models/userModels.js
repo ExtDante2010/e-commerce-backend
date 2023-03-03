@@ -71,6 +71,7 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.isPasswordMatched = async function (enterpassword) {
   return await bcrypt.compare(enterpassword, this.password);
 };
+
 userSchema.methods.createPasswordResetToken = async function () {
   const resetToken = crypto.randomBytes(32).toString("hex");
 
@@ -82,7 +83,7 @@ userSchema.methods.createPasswordResetToken = async function () {
     .digest("hex");
 
   // set expire time
-  this.passwordResetExpires = new Date(Date.now() + 30 * 60 * 1000); // 10 minutes
+  this.passwordResetExpires = Date.now() + 30 * 60 * 1000; // 10 minutes
   return resetToken;
 };
 

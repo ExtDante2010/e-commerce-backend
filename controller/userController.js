@@ -207,15 +207,14 @@ export const unblockUser = asyncHandlers(async (req, res) => {
 // handler update password
 
 export const updatePassword = asyncHandlers(async (req, res) => {
-  const id = req.user.id;
-  const password = req.body;
-  validateMoongoId(id);
-  const user = await User.findById(id);
-  console.log(user);
+  const { _id } = req.user;
+  const { password } = req.body;
+  validateMoongoId(_id);
+  let user = await User.findById(_id);
   if (password) {
-    User.password = password;
-    const updatePassword = await user.save();
-    res.json(updatePassword);
+    user.password = password;
+    const passwordUpdate = await user.save();
+    res.json(passwordUpdate);
   } else {
     res.json(user);
   }
