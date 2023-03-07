@@ -3,11 +3,13 @@ import {
   blockUser,
   createUser,
   deleteAuser,
+  forgotPasswordToken,
   getAlluser,
   getAuser,
   handleRefreshToken,
   loginUser,
   logout,
+  resetPassword,
   unblockUser,
   updateAuser,
   updatePassword,
@@ -19,6 +21,8 @@ const router = Express.Router();
 // user //
 
 router.post("/register", createUser);
+router.post("/forgot-password-token", forgotPasswordToken);
+router.put("/reset-password/:token", resetPassword);
 router.put("/password", authMidellware, updatePassword);
 router.post("/login", loginUser);
 router.get("/all-users", getAlluser);

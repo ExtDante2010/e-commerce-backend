@@ -73,18 +73,18 @@ userSchema.methods.isPasswordMatched = async function (enterpassword) {
 };
 
 userSchema.methods.createPasswordResetToken = async function () {
-  const resetToken = crypto.randomBytes(32).toString("hex");
+  const tokenReset = crypto.randomBytes(32).toString("hex");
 
   //Hash token
 
   this.passwordResetToken = crypto
     .createHash("sha256")
-    .update(resetToken)
+    .update(tokenReset)
     .digest("hex");
 
   // set expire time
   this.passwordResetExpires = Date.now() + 30 * 60 * 1000; // 10 minutes
-  return resetToken;
+  return tokenReset;
 };
 
 export default mongoose.model("User", userSchema);

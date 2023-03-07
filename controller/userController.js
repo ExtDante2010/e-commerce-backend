@@ -207,10 +207,10 @@ export const unblockUser = asyncHandlers(async (req, res) => {
 // handler update password
 
 export const updatePassword = asyncHandlers(async (req, res) => {
-  const { _id } = req.user;
-  const { password } = req.body;
-  validateMoongoId(_id);
-  let user = await User.findById(_id);
+  const id = req.user.id;
+  const password = req.body.password;
+  validateMoongoId(id);
+  let user = await User.findById(id);
   if (password) {
     user.password = password;
     const passwordUpdate = await user.save();
@@ -218,4 +218,41 @@ export const updatePassword = asyncHandlers(async (req, res) => {
   } else {
     res.json(user);
   }
+});
+
+export const forgotPasswordToken = asyncHandlers(async (req, res) => {
+  const { email } = req.body;
+  const user = User.findOne({ email });
+  if (!user) throw new Error("User not found with this email");
+  try {
+    const token = await user.createPasswordResetToken();
+    await user.save();
+    const resetUrl = `Hi, please follow link to reset Your password. This link is valid till 10 minutes from now. <a href='http://localhost:5000/api/user/reset-password/${token}'>click here</a>`;
+    const data = {
+      to: email,
+      sunject: "Forgot password Link",
+      text: "Hey User",
+      html: resetUrl,
+    };
+    sendEmail(data);
+    res.json(token);
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+export const resetPassword = asyncHandlers(async (req, res) => {
+  const { password } = req.body;
+  const { token } = req.params;
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+  const user = User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+  if (!user) throw new Error("Token Expired, Please try again later");
+  user.password = password;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
+  res.json(user);
 });
