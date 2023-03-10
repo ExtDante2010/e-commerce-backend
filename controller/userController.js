@@ -4,6 +4,7 @@ import generateToken from "../config/jwTojen.js";
 import { validateMoongoId } from "../utils/validateMongodb.js";
 import generateRefreshToken from "../config/refreshToken.js";
 import jsonwebtoken from "jsonwebtoken";
+import { sendEmail } from "./emailController.js";
 
 // HANDLER CREATE USER //
 
@@ -222,10 +223,10 @@ export const updatePassword = asyncHandlers(async (req, res) => {
 
 export const forgotPasswordToken = asyncHandlers(async (req, res) => {
   const { email } = req.body;
-  const user = User.findOne({ email });
+  const user = await User.findOne({ email });
   if (!user) throw new Error("User not found with this email");
   try {
-    const token = await user.createPasswordResetToken();
+    const token = await user.schema.methods.createPasswordResetToken();
     await user.save();
     const resetUrl = `Hi, please follow link to reset Your password. This link is valid till 10 minutes from now. <a href='http://localhost:5000/api/user/reset-password/${token}'>click here</a>`;
     const data = {
@@ -240,7 +241,6 @@ export const forgotPasswordToken = asyncHandlers(async (req, res) => {
     throw new Error(error);
   }
 });
-
 export const resetPassword = asyncHandlers(async (req, res) => {
   const { password } = req.body;
   const { token } = req.params;

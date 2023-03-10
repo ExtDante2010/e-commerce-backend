@@ -8,13 +8,12 @@ export const sendEmail = expressAsyncHandler(async (data, req, res) => {
     let testAccount = await nodemailer.createTestAccount();
 
     // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+    const transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
       port: 587,
-      secure: false, // true for 465, false for other ports
       auth: {
-        user: process.env.MAIL_ID, // generated ethereal user
-        pass: process.env.MAIL_PASSWORD, // generated ethereal password
+        user: "lisa.hettinger@ethereal.email",
+        pass: "Wb1xBDef7HBzW7G8PJ",
       },
     });
 
@@ -26,13 +25,12 @@ export const sendEmail = expressAsyncHandler(async (data, req, res) => {
       text: data.text, // plain text body
       html: data.html, // html body
     });
+
+    console.log("Message sent: %s", info.messageId);
+
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
   }
+  main().catch(console.error);
 });
-console.log("Message sent: %s", info.messageId);
-// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-// Preview only available when sending through an Ethereal account
-console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-
-main().catch(console.error);
