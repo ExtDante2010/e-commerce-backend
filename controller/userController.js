@@ -5,6 +5,7 @@ import { validateMoongoId } from "../utils/validateMongodb.js";
 import generateRefreshToken from "../config/refreshToken.js";
 import jsonwebtoken from "jsonwebtoken";
 import { sendEmail } from "./emailController.js";
+import crypto from "crypto";
 
 // HANDLER CREATE USER //
 
@@ -242,13 +243,14 @@ export const forgotPasswordToken = asyncHandlers(async (req, res) => {
   }
 });
 export const resetPassword = asyncHandlers(async (req, res) => {
-  const { password } = req.body;
-  const { token } = req.params;
+  const password = req.body.password;
+  const token = req.params.token;
   const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
-  const user = User.findOne({
+  const user = await User.findOne({
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() },
   });
+  console.log(user);
   if (!user) throw new Error("Token Expired, Please try again later");
   user.password = password;
   user.passwordResetToken = undefined;
