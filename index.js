@@ -7,6 +7,7 @@ import dbConnect from "./config/dbconnect.js";
 import router from "./routes/authRoute.js";
 import { errorHandler, notFound } from "./midellwares/errorHandler.js";
 import { router as productRoute } from "./routes/productRoute.js";
+import { router as blogRoute } from "./routes/blogRoute.js";
 
 const app = Express();
 const doteNv = dotenv.config();
@@ -20,6 +21,8 @@ app.use(cookieParser());
 
 app.use("/api/user/", router);
 app.use("/api/product/", productRoute);
+app.use("/api/blog/", blogRoute);
+
 app.use(notFound);
 app.use(errorHandler);
 

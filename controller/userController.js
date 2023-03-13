@@ -5,7 +5,6 @@ import { validateMoongoId } from "../utils/validateMongodb.js";
 import generateRefreshToken from "../config/refreshToken.js";
 import jsonwebtoken from "jsonwebtoken";
 import { sendEmail } from "./emailController.js";
-import crypto from "crypto";
 // HANDLER CREATE USER //
 
 export const createUser = asyncHandlers(async (req, res) => {
