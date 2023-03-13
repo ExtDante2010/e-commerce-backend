@@ -1,9 +1,6 @@
 import asyncHandlers from "express-async-handler";
 import Product from "../models/productModels.js";
 import slugify from "slugify";
-import query from "express";
-import e from "cors";
-import { parse } from "dotenv";
 
 // HANDLER CREATE PRODUCT //
 
