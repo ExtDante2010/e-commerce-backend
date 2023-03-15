@@ -8,6 +8,7 @@ import router from "./routes/authRoute.js";
 import { errorHandler, notFound } from "./midellwares/errorHandler.js";
 import { router as productRoute } from "./routes/productRoute.js";
 import { router as blogRoute } from "./routes/blogRoute.js";
+import { router as categoryRoute } from "./routes/categotyRoute.js";
 
 const app = Express();
 const doteNv = dotenv.config();
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use("/api/user/", router);
 app.use("/api/product/", productRoute);
 app.use("/api/blog/", blogRoute);
+app.use("/api/category/", categoryRoute);
 
 app.use(notFound);
 app.use(errorHandler);

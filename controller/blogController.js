@@ -8,7 +8,6 @@ export const createBlog = asyncHandlers(async (req, res) => {
   try {
     const createBlog = await Blog.create(req.body);
     res.json({
-      status: "success",
       createBlog,
     });
   } catch (error) {
