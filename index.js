@@ -32,6 +32,6 @@ app.use("/api/brand/", brandRoute);
 app.use(notFound);
 app.use(errorHandler);
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
   console.log(`server is runing at PORT ${PORT}`);
 });
