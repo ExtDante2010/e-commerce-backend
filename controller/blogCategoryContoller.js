@@ -1,13 +1,13 @@
 import BlogCategory from "../models/blogCategoryModel.js";
-import asyncHandlers from "express-async-handler";
 import { validateMoongoId } from "../utils/validateMongodb.js";
+import expressAsyncHandler from "express-async-handler";
 
 //CREATE CATEGORY //
 
 export const createBlogCategory = expressAsyncHandler(async (req, res) => {
   try {
     const newCategory = await BlogCategory.create(req.body);
-    res.json({ newCategory });
+    res.json(newCategory);
   } catch {
     throw new Error("CATEGORY IS CERATED");
   }
@@ -17,6 +17,7 @@ export const createBlogCategory = expressAsyncHandler(async (req, res) => {
 
 export const updateBlogCategory = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
+  validateMoongoId(id);
 
   try {
     const update = await BlogCategory.findByIdAndUpdate(id, req.body, {

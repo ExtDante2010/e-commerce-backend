@@ -28,7 +28,7 @@ router.put("/password", authMidellware, updatePassword);
 router.post("/login", loginUser);
 router.get("/all-users", getAlluser);
 router.get("/refresh", authMidellware, isAdmin, handleRefreshToken);
-router.get("/logout", logout);
+router.post("/logout", logout);
 router.get("/getuser/:id", authMidellware, isAdmin, getAuser);
 router.delete("/delete-user/:id", deleteAuser);
 

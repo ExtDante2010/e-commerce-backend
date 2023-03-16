@@ -5,7 +5,7 @@ import {
   deleteBlogCategory,
   getBlogCategory,
   updateBlogCategory,
-} from "../controller/blogCategotyController.js";
+} from "../controller/blogCategoryContoller.js";
 import authMidellware, { isAdmin } from "../midellwares/authMidellware.js";
 
 export const router = Express.Router();

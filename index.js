@@ -9,7 +9,7 @@ import { errorHandler, notFound } from "./midellwares/errorHandler.js";
 import { router as productRoute } from "./routes/productRoute.js";
 import { router as blogRoute } from "./routes/blogRoute.js";
 import { router as categoryRoute } from "./routes/categotyRoute.js";
-import { router as blogCategoryRoute } from "./routes/blogCategoryRoute";
+import { router as blogCategoryRoute } from "./routes/blogCategoryRoute.js";
 
 const app = Express();
 const doteNv = dotenv.config();
