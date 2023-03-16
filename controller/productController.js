@@ -1,4 +1,5 @@
 import asyncHandlers from "express-async-handler";
+import User from "../models/userModels.js";
 import Product from "../models/productModels.js";
 import slugify from "slugify";
 
@@ -106,6 +107,40 @@ export const deleteProduct = asyncHandlers(async (req, res) => {
     res.json({
       productDelete,
     });
+  } catch (error) {
+    throw new Error(error);
+  }
+});
+
+export const addToWishlist = asyncHandlers(async (req, res) => {
+  const { _id } = req.user;
+  const { proId } = req.body;
+  try {
+    const user = await User.findById(_id);
+    const addAlready = user.wishlist.find((id) => id.toString() === proId);
+    if (addAlready) {
+      let user = await User.findByIdAndUpdate(
+        _id,
+        {
+          $pull: { wishlist: proId },
+        },
+        {
+          new: true,
+        }
+      );
+      res.json(user);
+    } else {
+      let user = await User.findByIdAndUpdate(
+        _id,
+        {
+          $push: { wishlist: proId },
+        },
+        {
+          new: true,
+        }
+      );
+      res.json(user);
+    }
   } catch (error) {
     throw new Error(error);
   }
