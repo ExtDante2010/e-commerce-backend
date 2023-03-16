@@ -1,12 +1,12 @@
-import expressAsyncHandler from "express-async-handler";
-import Category from "../models/categoryModel.js";
+import BlogCategory from "../models/blogCategoryModel.js";
+import asyncHandlers from "express-async-handler";
 import { validateMoongoId } from "../utils/validateMongodb.js";
 
 //CREATE CATEGORY //
 
-export const createCategory = expressAsyncHandler(async (req, res) => {
+export const createBlogCategory = expressAsyncHandler(async (req, res) => {
   try {
-    const newCategory = await Category.create(req.body);
+    const newCategory = await BlogCategory.create(req.body);
     res.json({ newCategory });
   } catch {
     throw new Error("CATEGORY IS CERATED");
@@ -15,11 +15,11 @@ export const createCategory = expressAsyncHandler(async (req, res) => {
 
 // UPDATE CATEGORY //
 
-export const updateCategory = expressAsyncHandler(async (req, res) => {
+export const updateBlogCategory = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
 
   try {
-    const update = await Category.findByIdAndUpdate(id, req.body, {
+    const update = await BlogCategory.findByIdAndUpdate(id, req.body, {
       new: true,
     });
     res.json(update);
@@ -30,9 +30,9 @@ export const updateCategory = expressAsyncHandler(async (req, res) => {
 
 // SEARCH ALL CATEGORY //
 
-export const allCategory = expressAsyncHandler(async (req, res) => {
+export const allBlogCategory = expressAsyncHandler(async (req, res) => {
   try {
-    const category = await Category.find();
+    const category = await BlogCategory.find();
     res.json(category);
   } catch {
     throw new Error();
@@ -41,11 +41,11 @@ export const allCategory = expressAsyncHandler(async (req, res) => {
 
 // SEARCH A CATEGORY //
 
-export const getCategory = expressAsyncHandler(async (req, res) => {
+export const getBlogCategory = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMoongoId(id);
   try {
-    const category = await Category.findById(id);
+    const category = await BlogCategory.findById(id);
     res.json(category);
   } catch (error) {
     throw new Error(error);
@@ -54,11 +54,11 @@ export const getCategory = expressAsyncHandler(async (req, res) => {
 
 // DELETE CATEGORY //
 
-export const deleteCategory = expressAsyncHandler(async (req, res) => {
+export const deleteBlogCategory = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   validateMoongoId(id);
   try {
-    const categoryDelete = await Category.findByIdAndDelete(id);
+    const categoryDelete = await BlogCategory.findByIdAndDelete(id);
     res.json({ categoryDelete });
   } catch (error) {
     throw new Error(error);
