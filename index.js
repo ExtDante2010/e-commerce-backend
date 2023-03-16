@@ -10,6 +10,7 @@ import { router as productRoute } from "./routes/productRoute.js";
 import { router as blogRoute } from "./routes/blogRoute.js";
 import { router as categoryRoute } from "./routes/categotyRoute.js";
 import { router as blogCategoryRoute } from "./routes/blogCategoryRoute.js";
+import { router as brandRoute } from "./routes/brandRouter.js";
 
 const app = Express();
 const doteNv = dotenv.config();
@@ -26,6 +27,7 @@ app.use("/api/product/", productRoute);
 app.use("/api/blog/", blogRoute);
 app.use("/api/category/", categoryRoute);
 app.use("/api/blog-category/", blogCategoryRoute);
+app.use("/api/brand/", brandRoute);
 
 app.use(notFound);
 app.use(errorHandler);

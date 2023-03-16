@@ -60,7 +60,7 @@ export const deleteBlogCategory = expressAsyncHandler(async (req, res) => {
   validateMoongoId(id);
   try {
     const categoryDelete = await BlogCategory.findByIdAndDelete(id);
-    res.json({ categoryDelete });
+    res.json(categoryDelete);
   } catch (error) {
     throw new Error(error);
   }
